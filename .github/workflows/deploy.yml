@@ -1,51 +1,68 @@
-name: ajuste no terraform, deploy na aws
+name: Build and Deploy to ECR/ECS
 
 on:
   workflow_dispatch: {}
+
+env:
+  AWS_REGION: sa-east-1
+  ECR_REPOSITORY: react-ci-cd-cloud
+  ECS_CLUSTER: react-ci-cd-cloud
+  ECS_SERVICE: react-ci-cd-cloud
+  APP_NAME: react-ci-cd-cloud
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      TF_VAR_bucket_name: react-aws-deploy2
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 18
 
-      - name: Instalar dependências
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Rodar testes
+      - name: Run tests
         run: npm test
 
-      - name: Gerar build de produção
+      - name: Build production bundle
         run: npm run build
 
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: sa-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Instalar Terraform
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        id: image
+        run: |
+          ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+          IMAGE_URI=$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker build -t "$IMAGE_URI" .
+          docker push "$IMAGE_URI"
+          echo "image_uri=$IMAGE_URI" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform -chdir=.github/workflows init
 
-      - name: Terraform Plan
-        run: terraform -chdir=.github/workflows plan -out=tfplan
-
-      - name: Terraform Apply
-        run: terraform -chdir=.github/workflows apply -auto-approve tfplan
-
-      - name: Upload artefatos para o S3
-        run: aws s3 sync dist/ s3://react-aws-deploy2/ --delete --exact-timestamps
+      - name: Terraform Apply (ECR/ECS)
+        run: |
+          terraform -chdir=.github/workflows apply -auto-approve \
+            -var="aws_region=${{ env.AWS_REGION }}" \
+            -var="ecr_repository_name=${{ env.ECR_REPOSITORY }}" \
+            -var="app_name=${{ env.APP_NAME }}" \
+            -var="container_image=${{ steps.image.outputs.image_uri }}" \
+            -var="ecs_cluster_name=${{ env.ECS_CLUSTER }}" \
+            -var="ecs_service_name=${{ env.ECS_SERVICE }}"
