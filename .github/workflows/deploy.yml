@@ -1,0 +1,51 @@
+name: ajuste no terraform, deploy na aws
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_VAR_bucket_name: react-aws-deploy2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Rodar testes
+        run: npm test
+
+      - name: Gerar build de produção
+        run: npm run build
+
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: sa-east-1
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform -chdir=.github/workflows init
+
+      - name: Terraform Plan
+        run: terraform -chdir=.github/workflows plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform -chdir=.github/workflows apply -auto-approve tfplan
+
+      - name: Upload artefatos para o S3
+        run: aws s3 sync dist/ s3://react-aws-deploy2/ --delete --exact-timestamps

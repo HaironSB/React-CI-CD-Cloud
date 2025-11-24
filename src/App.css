@@ -1,0 +1,271 @@
+.app-shell {
+  min-height: 100vh;
+  padding: 48px 16px 72px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.glass-card {
+  width: min(1100px, 100%);
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 32px 40px;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(20px);
+}
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  margin-bottom: 32px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.nav-brand .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 100%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.7);
+}
+
+.nav-brand small {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #5f6b86;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.nav-link {
+  border: none;
+  background: transparent;
+  color: #4c5c80;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s;
+}
+
+.nav-link:hover {
+  background: rgba(79, 70, 229, 0.1);
+  color: #111d68;
+}
+
+.nav-link.active {
+  background: #111d68;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(17, 29, 104, 0.3);
+}
+
+.hero {
+  background: linear-gradient(135deg, #111d68, #4d6fe7);
+  border-radius: 28px;
+  padding: 32px;
+  color: #f1f5ff;
+  box-shadow: 0 20px 45px rgba(17, 29, 104, 0.35);
+}
+
+.hero-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: rgba(241, 245, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.hero-description {
+  margin-top: 10px;
+  max-width: 640px;
+  color: rgba(241, 245, 255, 0.9);
+  font-size: 1.05rem;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hero-stats article {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(241, 245, 255, 0.75);
+}
+
+.stat-value {
+  display: block;
+  margin: 4px 0 6px;
+  font-size: 1rem;
+}
+
+.info-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+}
+
+.info-card h2 {
+  margin: 8px 0 12px;
+  color: #0f172a;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.description {
+  max-width: 720px;
+  color: #475569;
+  font-size: 1rem;
+}
+
+.highlight-list {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.highlight-item {
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 16px 18px;
+  background: #f8fafc;
+  min-height: 110px;
+}
+
+.highlight-item strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #0f172a;
+}
+
+.highlight-item span {
+  color: #4b5563;
+}
+
+.link-pills {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+}
+
+.home-accent {
+  border-top: 4px solid #4f46e5;
+}
+
+.home-accent .pill {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.sobre-accent {
+  border-top: 4px solid #0ea5e9;
+}
+
+.sobre-accent .pill {
+  background: #0ea5e9;
+  color: #fff;
+}
+
+.contato-accent {
+  border-top: 4px solid #16cff9;
+}
+
+.app-footer {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  color: #5f6b86;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+  .glass-card {
+    padding: 28px;
+  }
+
+  .app-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+  }
+
+  .hero,
+  .info-card {
+    padding: 24px;
+  }
+}
